@@ -76,6 +76,31 @@ fun CollapsibleBoxScreen() {
 
                 return Offset(0f, consumedY)
             }
+
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                val delta = available.y
+                var consumedY = 0f
+
+                // Ajustar a altura do Box apenas se o primeiro item estiver visível
+                if (listState.firstVisibleItemScrollOffset == 0) {
+                    val newHeight = (boxHeightPx + delta).coerceIn(0f, maxBoxHeightPx)
+                    val consumed = newHeight - boxHeightPx
+                    boxHeightPx = newHeight
+
+                    // Se ajustamos a altura do Box, consumimos o scroll correspondente
+                    if (consumed != 0f) {
+                        consumedY = consumed
+                    }
+                }
+
+                return Offset(0f, consumedY)
+
+
+            }
         }
     }
 
